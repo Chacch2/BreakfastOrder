@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>佳佳早餐店前台登入</title>
+    <link rel="stylesheet" href="/Content/loginstyles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/vue@3.5.3/dist/vue.global.js"></script>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" />
+
+</head>
+<body>
+    <div id="app" class="login-container">
+        <div class="login-box">
+            <h2 class="fredoka-custom">Welcome!</h2>
+            <h2 class="fredoka-custom2">
+                <span class="text-part1">佳佳</span><span class="text-part2">早餐店</span>
+                <img src="/Content/images/logo.png"
+                     alt="圖案"
+                     style="width: 20px; height: 20px"
+                     class="text-logo" />
+            </h2>
+            <form @submit.prevent="login">
+                <div class="input-group">
+                    <label for="emailOrPhone">帳號:</label>
+                    <input type="email" v-model="email" placeholder="email" required />
+                    <span class="icon user-icon"></span>
+                </div>
+                <div class="input-group2">
+                    <label for="password">密碼:</label>
+                    <input type="password" v-model="password" placeholder="password" required />
+                    <span class="icon password-icon"></span>
+                </div>
+
+                <button type="submit">登入</button>
+                <div class="links">
+                    <a href="register.html">註冊</a>
+                    <a href="#" id="forgot-password" @click="forgotPassword">忘記密碼?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        data() {
+          return {
+            email: '',  // 用戶輸入的email
+            password: '' // 用戶輸入的password
+          };
+        },
+        methods: {
+          async login() {
+            try {
+              const response = await fetch('/html/json/members.json');
+              const data = await response.json();
+              const members = data.members;
+
+              // 根據 email 和 password 查找匹配的會員
+              const member = members.find(
+                (member) => member.email === this.email && member.password === this.password
+              );
+
+              if (member) {
+                // 成功登入，儲存會員資料到 localStorage
+                const userData = {
+                  name: member.name,
+                  profilePhoto: member.profilePhoto,
+                  email: member.email,
+                  points: member.points,
+                  phone: member.phone,
+                };
+
+                localStorage.setItem('user', JSON.stringify(userData));
+
+                // 跳轉到首頁
+                window.location.href = '/html/html/meal.html';
+              } else {
+                // 如果未找到匹配的會員，顯示錯誤訊息
+                Swal.fire({
+                title: '登入失敗',
+                text: '帳號或密碼不正確，請重新輸入',
+                icon: 'error',
+                confirmButtonText: '確定'
+              }).then(() => {
+                // 清空輸入欄位
+                this.email = '';
+                this.password = '';
+              });
+              }
+            } catch (error) {
+              console.error('無法加載會員資料:', error);
+              Swal.fire({
+                title: '系統錯誤',
+                text: '請稍後再試',
+                icon: 'error',
+                confirmButtonText: '確定'
+              });
+            }
+          },
+          forgotPassword() {
+            Swal.fire({
+              title: '請輸入您註冊時的信箱',
+              input: 'email',
+              inputPlaceholder: '輸入您的信箱',
+              showCancelButton: true,
+              confirmButtonText: '確認',
+              cancelButtonText: '取消',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                Swal.fire({
+                  title: '已成功寄送',
+                  text: '修改密碼連結已發送至您的信箱',
+                  icon: 'success',
+                  confirmButtonText: '確定'
+                });
+              }
+            });
+          }
+        }
+      }).mount('#app');
+    </script>
+</body>
+</html>

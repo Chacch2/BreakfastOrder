@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>佳佳早餐店前台註冊</title>
+    <link rel="stylesheet" href="/Content/register.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h2 class="fredoka-custom2">
+                <span class="text-part1">註冊帳號</span>
+                <img src="/Content/images/logo.png"
+                     alt="圖案"
+                     style="width: 20px; height: 20px"
+                     class="text-logo" />
+            </h2>
+            <div class="avatar-wrapper">
+                <div class="avatar-container">
+                    <img id="avatar" />
+                    <div class="overlay">
+                        <span class="plus-icon">+</span>
+                    </div>
+                </div>
+                <div class="avatar-label">大頭貼</div>
+            </div>
+            <form>
+                <div class="input-group2">
+                    <label for="name">姓名:</label>
+                    <input type="name" placeholder="name" required />
+                    <!-- <span class="icon password-icon"></span> -->
+                </div>
+                <div class="input-group">
+                    <label for="email">帳號:</label>
+                    <input type="email" placeholder="email" required />
+                    <!-- <span class="icon user-icon"></span> -->
+                </div>
+                <div class="input-group3">
+                    <label for="password">電話:</label>
+                    <input type="phone" placeholder="phone" required />
+                    <!-- <span class="icon password-icon"></span> -->
+                </div>
+                <div class="input-group4">
+                    <label for="password">密碼:</label>
+                    <input type="password" placeholder="password" required />
+                    <!-- <span class="icon password-icon"></span> -->
+                </div>
+                <div class="input-group5">
+                    <label for="password">確認密碼:</label>
+                    <input type="password" placeholder="password" required />
+                    <!-- <span class="icon password-icon"></span> -->
+                </div>
+
+                <button type="submit" id="btn">註冊</button>
+
+                <!-- <div id="dialog" title="Basic dialog" style="display: none">
+                  <p>成功註冊</p> -->
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+      document
+        .querySelector(".avatar-container")
+        .addEventListener("click", function () {
+          // 模擬文件選擇操作
+          const fileInput = document.createElement("input");
+          fileInput.type = "file";
+          fileInput.accept = "image/*";
+          fileInput.onchange = function (event) {
+            const file = event.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                document.getElementById("avatar").src = e.target.result;
+              };
+              reader.readAsDataURL(file);
+            }
+          };
+          fileInput.click();
+        });
+
+        document.getElementById("btn").addEventListener("click", function() {
+            event.preventDefault(); // 阻止表單的默認提交行為
+            Swal.fire({
+            title: "註冊成功!",
+            text: "歡迎加入我們的網站",
+            icon: "success",
+            confirmButtonText: "確定"
+            }).then((result) =>
+         {
+            // if (result.isConfirmed)
+            // {
+            // // 當使用者點擊確認按鈕後，再提交表單
+            // document.querySelector("form").submit();
+            // }
+            });
+        });
+
+
+    </script>
+</body>
+</html>
